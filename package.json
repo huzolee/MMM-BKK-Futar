@@ -1,0 +1,17 @@
+{
+  "name": "BKKCourier",
+  "version": "1.0.0",
+  "keywords": [
+    "Futar",
+    "Futár",
+    "BKK-Futar",
+    "BKK-Futár",
+    "MMM-BKK-Futar",
+    "MMM-BKK-Futár"
+  ],
+  "author": "SZECSKÓ Zoltán <zoltan.szecsko@gmail.com>",
+  "contributors": [],
+  "dependencies": {
+    "ssl-root-cas": "1.2.5"
+  }
+}
