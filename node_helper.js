@@ -1,9 +1,9 @@
 const NodeHelper = require("node_helper");
 const request = require('request');
-const StopTime = require("./StopTime");
-const Stop = require("./Stop");
-const Route = require("./Route");
-const Trip = require("./Trip");
+const StopTime = require("./model/StopTime");
+const Stop = require("./model/Stop");
+const Route = require("./model/Route");
+const Trip = require("./model/Trip");
 
 require('ssl-root-cas').inject();
 
