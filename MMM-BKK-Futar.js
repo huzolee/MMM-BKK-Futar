@@ -1,16 +1,13 @@
 Module.register('MMM-BKK-Futar', {
 
     defaults: {
-        line: 'járat',
-        stop: 'megálló',
-        terminal: 'végállomás',
-        come: 'perc'
+        comingRoutes: []
     },
     getTemplate: function () {
         return 'courierTemplate.njk'
     },
     getTemplateData: function () {
-        return this.config
+        return this.config;
     },
     start: function () {
         this.registerSocketNotificationSender();
@@ -19,5 +16,11 @@ Module.register('MMM-BKK-Futar', {
         this.sendSocketNotification("BKKFutarSocketNotificationSenderRegistered", {
             config: this.config
         });
-    }
+    },
+    socketNotificationReceived: function (notification, payload) {
+        if (notification === "BKKFutarNotificationSent") {
+            this.config.comingRoutes = payload;
+            this.updateDom();
+        }
+    },
 });

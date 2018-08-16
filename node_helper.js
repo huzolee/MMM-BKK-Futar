@@ -19,11 +19,11 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: function (notification, payload) {
         if (notification === "BKKFutarSocketNotificationSenderRegistered") {
             this.config = payload.config
-            this.updateSchedule(0);
+            this.updateDisplay(0);
             return;
         }
     },
-    updateSchedule: function (delay) {
+    updateDisplay: function (delay) {
         clearTimeout(this.updateTimer);
         const self = this;
         this.updateTimer = setTimeout(function () {
@@ -50,15 +50,57 @@ module.exports = NodeHelper.create({
             });
     },
     processData: function (body) {
-        const currentTime = new Date(body['currentTime']);
-        const headers = {stop: "Megálló:", line: "Járat:", stopHead: "Végállomás:", waiting: "Érkezik:"};
+        const currentTime = parseInt(body['currentTime'] / 1000);
         const rowsToDisplay = [];
-        rowsToDisplay.push(headers);
 
         this.stopTimes = this.getStopTimes(body['data']['entry']['stopTimes']);
         this.stops = this.getStops(body['data']['references']['stops']);
         this.routes = this.getRoutes(body['data']['references']['routes']);
         this.trips = this.getTrips(body['data']['references']['trips']);
+
+        for (let stop of this.stops) {
+            const stopName = stop.getName();
+            const stopRouteIds = stop.getRouteIds();
+
+            for (let route of this.routes) {
+                const routeId = route.getId();
+                if (this.isRouteIdInRouteArray(routeId, stopRouteIds)) {
+                    const type = route.getType();
+                    const shortName = route.getShortName();
+
+                    for (let trip of this.trips) {
+                        if (trip.getRouteId() === routeId) {
+                            const tripHeadsign = trip.getTripHeadsign();
+
+                            for (let stopTime of this.stopTimes) {
+                                if (trip.getId() === stopTime.getTripId()) {
+                                    const predictedArrivalTime = stopTime.getPredictedArrivalTime();
+                                    const arrivalTime = stopTime.getArrivalTime();
+                                    let waiting;
+
+                                    if (predictedArrivalTime === undefined) {
+                                        waiting = parseInt((arrivalTime - currentTime) / 60);
+                                    } else {
+                                        waiting = parseInt((predictedArrivalTime - currentTime) / 60);
+                                    }
+
+                                    if (waiting >= 5 && waiting <= 30) {
+                                        rowsToDisplay.push({
+                                            stop: stopName,
+                                            line: shortName,
+                                            stopHead: tripHeadsign,
+                                            waiting: waiting
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        this.sendNotificationForBKKCourier(rowsToDisplay);
+        this.updateDisplay(60 * 1000);
     },
     getStopTimes: function (stopTimes) {
         const stopTimeList = [];
@@ -114,11 +156,18 @@ module.exports = NodeHelper.create({
             tripList.push(new Trip(id, routeId, tripHeadsign));
         }
 
-        console.log('tripList', tripList);
-
         return tripList;
     },
-    sendNotificationForBKKCourier: function () {
-        this.sendSocketNotification("BKKFutarNotificationSent", this.bustimes);
+    sendNotificationForBKKCourier: function (comingRoutes) {
+        this.sendSocketNotification("BKKFutarNotificationSent", comingRoutes);
+    },
+    isRouteIdInRouteArray: function (routeId, routeIds) {
+        for (let rId of routeIds) {
+            if (rId === routeId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 });

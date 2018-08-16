@@ -5,10 +5,13 @@
         <th>Végállomás</th>
         <th>Érkezik</th>
     </tr>
-    <tr>
-        <td>{{ line }}</td>
-        <td>{{ stop }}</td>
-        <td>{{ terminal }}</td>
-        <td>{{ come }}</td>
-    </tr>
+
+    {% for route in comingRoutes %}
+        <tr>
+            <td>{{ route.line }}</td>
+            <td>{{ route.stop }}</td>
+            <td>{{ route.stopHead }}</td>
+            <td>{{ route.waiting }}</td>
+        </tr>
+    {% endfor %}
 </table>
