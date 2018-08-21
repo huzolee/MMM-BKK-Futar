@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+.dataTable {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.7em;
+}
+
+th {
+    color: white;
+}
+
+td {
+    color: darkgray;
+}
+
+th, td {
+    padding-right: 0.7em;
+}
+
+tr {
+    line-height: 0.9em;
+}

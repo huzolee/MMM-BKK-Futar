@@ -3,6 +3,9 @@ Module.register('MMM-BKK-Futar', {
     defaults: {
         comingRoutes: []
     },
+    getStyles: function () {
+        return ['futar.css'];
+    },
     getTemplate: function () {
         return 'courierTemplate.njk'
     },
