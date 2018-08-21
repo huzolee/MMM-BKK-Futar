@@ -51,7 +51,7 @@ module.exports = NodeHelper.create({
     },
     processData: function (body) {
         const currentTime = parseInt(body['currentTime'] / 1000);
-        const rowsToDisplay = [];
+        let rowsToDisplay = [];
 
         this.stopTimes = this.getStopTimes(body['data']['entry']['stopTimes']);
         this.stops = this.getStops(body['data']['references']['stops']);
@@ -84,7 +84,7 @@ module.exports = NodeHelper.create({
                                         waiting = parseInt((predictedArrivalTime - currentTime) / 60);
                                     }
 
-                                    if (waiting >= 5 && waiting <= 30) {
+                                    if (waiting >= 5 && waiting <= 15) {
                                         rowsToDisplay.push({
                                             stop: stopName,
                                             line: shortName,
@@ -99,6 +99,8 @@ module.exports = NodeHelper.create({
                 }
             }
         }
+
+        rowsToDisplay = this.sortRoutesByWaiting(rowsToDisplay);
         this.sendNotificationForBKKCourier(rowsToDisplay);
         this.updateDisplay(60 * 1000);
     },
@@ -169,5 +171,11 @@ module.exports = NodeHelper.create({
         }
 
         return false;
+    },
+    sortRoutesByWaiting: function (comingRoutes) {
+        return comingRoutes = comingRoutes.sort(this.compareFunc);
+    },
+    compareFunc: function (a, b) {
+        return a['waiting'] - b['waiting'];
     }
 });
