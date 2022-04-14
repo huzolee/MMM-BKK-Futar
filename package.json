@@ -1,17 +1,38 @@
 {
-  "name": "BKKCourier",
+  "name": "mmm-budapest-go",
   "version": "1.0.0",
+  "description": "BudapestGo MagicMirror² module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "dev": "rollup -c --sourcemap=inline",
+    "watch": "npm run dev -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huzolee/MMM-BKK-Futar.git"
+  },
   "keywords": [
-    "Futar",
-    "Futár",
-    "BKK-Futar",
-    "BKK-Futár",
-    "MMM-BKK-Futar",
-    "MMM-BKK-Futár"
+    "BudapestGo",
+    "MMM-budapest-go"
   ],
   "author": "SZECSKÓ Zoltán <zoltan.szecsko@gmail.com>",
-  "contributors": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/huzolee/MMM-BKK-Futar/issues"
+  },
   "dependencies": {
-    "ssl-root-cas": "1.2.5"
-  }
+    "node-fetch": "^3.2.3"
+  },
+  "devDependencies": {
+    "rollup": "^1.17.0",
+    "rollup-plugin-banner": "^0.2.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript": "^1.0.1",
+    "tslib": "^1.10.0",
+    "typescript": "^3.5.3"
+  },
+  "homepage": "https://github.com/huzolee/MMM-BKK-Futar#readme"
 }
